@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <nav>
+    <a href="edit-course.html">Edit</a>
+  </nav>
+  <body>
+    <main>
+      <form>
+        <label for="addCourse">Add Course</label>
+        <input type="text" name="addCourse" id="addCourse" />
+        <label for="department">Dept</label>
+        <input type="text" id="dept" />
+        <label for="courseNum">CourseNum</label>
+        <input type="number" name="courseNum" id="courseNum" />
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" />
+        <label for="numdays">NumDays</label>
+        <input type="number" id="numDays">
+
+        <label for="instructor">Instructor</label>
+        <input type="text" id="instructor" />
+        <div>
+          <button>Add</button>
+        </div>
+        <p id="courseAdd"></p>
+      </form>
+    </main>
+    <script>
+      (function () {
+        const $q = (selector) => document.querySelector(selector);
+        const courseAdded = $q("#courseAdded");
+        const addCourse = $q("#addCourse");
+        const form = $q("form");
+        const courseAdd = $q("#courseAdd");
+        const instructorInput = $q("#instructor");
+        const departmentInput = $q("#dept");
+        const courseNum = $q("#courseNum");
+        const startDateInput = $q("#startDate");
+        const numDaysInput = $q("#numDays")
+
+        function saveCourse(event) {
+          event.preventDefault();
+
+          const bodyData = {
+            courseName: addCourse.value,
+            instructor: instructorInput.value,
+            dept: departmentInput.value,
+            courseNum: courseNum.value,
+            startDate: startDateInput.value,
+            numDays: numDaysInput.value,
+          };
+          fetch("http://localhost:8888/courses", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bodyData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              window.location = "./courses.html";
+            })
+
+            .catch((error) => {
+              console.log(error);
+              addCourse.innerText = "An unexpected error occured.";
+            });
+        }
+        window.onload = function () {
+          form.onsubmit = saveCourse;
+        };
+      })();
+    </script>
+  </body>
+</html>
